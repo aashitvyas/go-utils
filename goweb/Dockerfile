@@ -11,6 +11,6 @@ RUN go get github.com/aashitvyas/go-utils/goweb
 RUN go install github.com/aashitvyas/go-utils/goweb
 
 # Run the outyet command by default when the container starts.
-ENTRYPOINT ["/go/bin/goegg"]
+ENTRYPOINT ["goweb"]
 
 EXPOSE 8000
