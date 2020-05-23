@@ -1,12 +1,13 @@
-Description: >
-This is cloudformation nested stack that will going to deploy sample go lang web app server
+
+Description: > 
+  This is cloudformation nested stack that will going to deploy sample go lang web app server 
   Author: Ash Vyas <aashitvyas@gmail.com>
 
 Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/vpc/vpc.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/vpc/vpc.yaml
       Parameters:
         EnvironmentName: !Ref AWS::StackName
         VpcCIDR: 10.180.0.0/16
@@ -18,7 +19,7 @@ Resources:
   SecurityGroups:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/vpc/security-groups.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/vpc/security-groups.yaml
       Parameters:
         EnvironmentName: !Ref AWS::StackName
         VPC: !GetAtt VPC.Outputs.VPC
@@ -26,7 +27,7 @@ Resources:
   ALB:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/loadbalancer/load-balancers.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/loadbalancer/load-balancers.yaml
       Parameters:
         EnvironmentName: !Ref AWS::StackName
         VPC: !GetAtt VPC.Outputs.VPC
@@ -36,7 +37,7 @@ Resources:
   ECS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/ecs/ecs-cluster.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/ecs/ecs-cluster.yaml
       Parameters:
         EnvironmentName: !Ref AWS::StackName
         InstanceType: t2.large
@@ -48,7 +49,7 @@ Resources:
   ProductService:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/services/product-service/service.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/services/product-service/service.yaml
       Parameters:
         VPC: !GetAtt VPC.Outputs.VPC
         Cluster: !GetAtt ECS.Outputs.Cluster
@@ -59,7 +60,7 @@ Resources:
   WebsiteService:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/services/website-service/service.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/services/website-service/service.yaml
       Parameters:
         VPC: !GetAtt VPC.Outputs.VPC
         Cluster: !GetAtt ECS.Outputs.Cluster
@@ -73,7 +74,7 @@ Resources:
   LifecycleHook:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/cloudformation/lifecyclehook/lifecyclehook.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/lifecyclehook/lifecyclehook.yaml
       Parameters:
         Cluster: !GetAtt ECS.Outputs.Cluster
         ECSAutoScalingGroupName: !GetAtt ECS.Outputs.ECSAutoScalingGroupName
