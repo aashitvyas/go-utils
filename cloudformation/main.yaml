@@ -49,7 +49,7 @@ Resources:
   ProductService:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/services/product-service/service.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/services/product-service/service.yaml
       Parameters:
         VPC: !GetAtt VPC.Outputs.VPC
         Cluster: !GetAtt ECS.Outputs.Cluster
@@ -60,7 +60,7 @@ Resources:
   WebsiteService:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/templates/services/website-service/service.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/services/website-service/service.yaml
       Parameters:
         VPC: !GetAtt VPC.Outputs.VPC
         Cluster: !GetAtt ECS.Outputs.Cluster
