@@ -1,6 +1,6 @@
 Description: >
-  This is an example of a long running ECS web service
-  via it's load balancer. 
+  This is an example of a long running ECS service that needs to connect to another ECS service (product-service)
+  via it's load balancer. We use environment variables to pass the URL of the product-service to this one's container(s).
 
 Parameters:
   VPC:
@@ -20,6 +20,10 @@ Parameters:
     Description: Maximum number of instances of this task we can run across our cluster
     Type: Number
     Default: 3
+
+  ProductServiceUrl:
+    Description: The URL of the Product Service (used to fetch product information)
+    Type: String
 
   Listener:
     Description: The Application Load Balancer listener to register with
@@ -44,7 +48,7 @@ Resources:
       DesiredCount: !Ref DesiredCount
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
-        - ContainerName: "web-service"
+        - ContainerName: "website-service"
           ContainerPort: 8000
           TargetGroupArn: !Ref TargetGroup
 
@@ -53,10 +57,13 @@ Resources:
     Properties:
       Family: website-service
       ContainerDefinitions:
-        - Name: web-service
+        - Name: website-service
           Essential: true
-          Image: 594839906885.dkr.ecr.ca-central-1.amazonaws.com/gowebcentral:18
+          Image: 275396840892.dkr.ecr.us-east-1.amazonaws.com/ecs-refarch-cloudformation/website-service:1.0.0
           Memory: 128
+          Environment:
+            - Name: PRODUCT_SERVICE_URL
+              Value: !Ref ProductServiceUrl
           PortMappings:
             - ContainerPort: 8000
           LogConfiguration:
@@ -69,7 +76,7 @@ Resources:
     Type: AWS::Logs::LogGroup
     Properties:
       LogGroupName: !Ref AWS::StackName
-      RetentionInDays: 60
+      RetentionInDays: 365
 
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup

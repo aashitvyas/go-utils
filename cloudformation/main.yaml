@@ -1,7 +1,6 @@
 
 Description: > 
   This is cloudformation nested stack that will going to deploy sample go lang web app server 
-  Author: Ash Vyas <aashitvyas@gmail.com>
 
 Resources:
   VPC:
@@ -46,21 +45,21 @@ Resources:
         SecurityGroup: !GetAtt SecurityGroups.Outputs.ECSHostSecurityGroup
         Subnets: !GetAtt VPC.Outputs.PrivateSubnets
 
-  ProductService:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/services/product-service/service.yaml
-      Parameters:
-        VPC: !GetAtt VPC.Outputs.VPC
-        Cluster: !GetAtt ECS.Outputs.Cluster
-        DesiredCount: 2
-        Listener: !GetAtt ALB.Outputs.Listener
-        Path: /products
+  # ProductService:
+  #   Type: AWS::CloudFormation::Stack
+  #   Properties:
+  #     TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/services/goweb-service/service.yaml
+  #     Parameters:
+  #       VPC: !GetAtt VPC.Outputs.VPC
+  #       Cluster: !GetAtt ECS.Outputs.Cluster
+  #       DesiredCount: 2
+  #       Listener: !GetAtt ALB.Outputs.Listener
+  #       Path: /products
 
   WebsiteService:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/services/website-service/service.yaml
+      TemplateURL: https://ecs-cf-ca-central-1.s3.ca-central-1.amazonaws.com/services/goweb-service/service.yaml
       Parameters:
         VPC: !GetAtt VPC.Outputs.VPC
         Cluster: !GetAtt ECS.Outputs.Cluster
@@ -80,9 +79,9 @@ Resources:
         ECSAutoScalingGroupName: !GetAtt ECS.Outputs.ECSAutoScalingGroupName
 
 Outputs:
-  ProductServiceUrl:
-    Description: The URL endpoint for the product service
-    Value: !Join ["/", [!GetAtt ALB.Outputs.LoadBalancerUrl, "products"]]
+  # ProductServiceUrl:
+  #   Description: The URL endpoint for the product service
+  #   Value: !Join ["/", [!GetAtt ALB.Outputs.LoadBalancerUrl, "products"]]
 
   WebsiteServiceUrl:
     Description: The URL endpoint for the website service
