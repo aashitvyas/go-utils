@@ -21,10 +21,6 @@ Parameters:
     Type: Number
     Default: 3
 
-  ProductServiceUrl:
-    Description: The URL of the Product Service (used to fetch product information)
-    Type: String
-
   Listener:
     Description: The Application Load Balancer listener to register with
     Type: String
@@ -61,9 +57,6 @@ Resources:
           Essential: true
           Image: 275396840892.dkr.ecr.us-east-1.amazonaws.com/ecs-refarch-cloudformation/website-service:1.0.0
           Memory: 128
-          Environment:
-            - Name: PRODUCT_SERVICE_URL
-              Value: !Ref ProductServiceUrl
           PortMappings:
             - ContainerPort: 8000
           LogConfiguration:
