@@ -60,10 +60,11 @@ func main() {
 		for _, group := range result.SecurityGroups {
 			for _, ippermission := range group.IpPermissions {
 
-				if ippermission.FromPort != nil && *ippermission.FromPort == 22 && *ippermission.IpProtocol == "tcp" {
+				if ippermission.FromPort != nil && *ippermission.FromPort != 443 && *ippermission.IpProtocol == "tcp" {
 					for _, iprange := range ippermission.IpRanges {
-						if *iprange.CidrIp == "0.0.0.0/0" {
-							fmt.Println("Group ID with tcp/22 allowing 0.0.0.0/0:-", *group.GroupId)
+						if *iprange.CidrIp == "0.0.0.0/0" || *iprange.CidrIp == "::/0" {
+							fmt.Println("Group ID ", *group.GroupId, "with", *ippermission.IpProtocol, "/", *ippermission.FromPort, "allowing CidrIp", *iprange.CidrIp)
+
 						}
 					}
 
